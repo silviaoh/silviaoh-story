@@ -74,7 +74,7 @@ Custom 할 때 참고해서 변경해야 할 파일들은 `gatsby-starter-bee` [
 
 왜냐하면 다른 blog 글을 보면 바로 배포를 눌러도 잘만 배포되던데 나는 Error가 나서 Failed가 계속 났기 때문이다.
 
-![](https://images.velog.io/images/silviaoh/post/479f5cae-96ac-4d60-9756-23de7d1b0252/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-09-08%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%2011.41.36.png)
+![](https://images.velog.io/images/silviaoh/post/dcf6079d-c551-429c-b1d2-404375295ea2/image.png)
 
 Failed된 이유를 찾기 위해 코드를 봤는데 아니나 다를까..npm이 설치되는 도중에 한참을 Installing에 머물러있다가 에러가 나는 현상을 목격하게되었다.
 
