@@ -1,5 +1,5 @@
 ---
-title: '[JavaScript.6] 실행 컨텍스트에 저장되는 정보 ⓵'
+title: '[JavaScript.6] 실행 컨텍스트에 저장되는 정보'
 date: 2021-09-11 22:09:58
 category: 'JavaScript'
 draft: false
@@ -36,7 +36,7 @@ draft: false
 
 변수 정보를 수집하는 과정을 모두 마치더라도 아직 코드는 실행 전이다. 코드가 실행되기 전임에도 자바스크립트 엔진은 이미 해당 환경에 속한 **모든 변수 정보를 알고 있는 것이 된다. 즉, 단순히 이해시키자면 '자바스크립트 엔진은 코드 안의 모든 변수를 최상단으로 끌어올린 다음 코드를 실행한다(Hoisting)'** 라고 생각해도 괜찮다는 것이다.
 
-### Example로 이해하는 호이스팅(Hoisting)
+#### **Example로 이해하는 호이스팅(Hoisting)**
 
 #### **변수를 호이스팅 할 때**
 
@@ -144,7 +144,7 @@ function a() {
 a()
 ```
 
-#### Example로 이해하는 함수 선언문 vs 함수 표현식
+#### **Example로 이해하는 함수 선언문 vs 함수 표현식**
 
 변수 호이스팅은 선언부만 호이스팅되고 할당부는 그 자리에 그대로 남겨둔다. 여기서 함수 선언문과 함수 표현식의 차이가 발생하게 된다.
 
@@ -188,14 +188,97 @@ multiply = function(a, b) {
 
 위처럼 함수 선언문은 함수 전체를 호이스팅 하는 반면 함수 표현식은 변수에 함수가 할당되어 있는 것이기 때문에 선언부만 호이스팅되고 할당부는 끌어올려지지 않는다. 여기서 결과의 차이가 발생하는 것이다.
 
+### outerEnvironmentReference
+
+- 연결 리스트 형태를 띈다.
+- 함수가 선언될 당시의 LexicalEnvironment의 정보를 참조한다.
+
+#### **Scope와 Scope Chain이란?**
+
+- 식별자에 대한 유효범위이다.
+- ES6에서 스코프는 함수에 의해서 또는 블록에 의해서 생성된다.
+- 식별자의 유효범위를 안에서부터 바깥으로 차례로 검색해 나가는 것을 `스코프 체인`이라고 한다.
+
+#### **Example로 이해하는 스코프 체인**
+
+```javascript
+1 var a = 1;
+2 var outer = function() {
+3   var inner = function() {
+4     console.log(a);
+5     var a = 3;
+6   }
+7   inner();
+8   console.log(a);
+9 }
+10 outer();
+11 console.log(a);
+```
+
+**활성화 컨텍스트: 전역**
+
+- 시작 : 전역 컨텍스트가 활성화됨.
+  - 전역 컨텍스트의 LexicalEnvironment에 들어가는 내용.
+    - environmentRecord에는 { a(전역 변수), outer(변수) } 형태로 저장된다.
+    - outerEnvironmentReference에는 아무것도 담기지 않는다.
+- a = 1 할당
+- outer에 함수 할당
+
+---
+
+**활성화 컨텍스트: outer**
+
+- `10번째 줄`: outer 함수 호출. 전역 컨텍스트 코드 일시 중단됨. outer 실행 컨텍스트가 활성화됨.
+- `2번째 줄`
+  - environmentRecord에는 { inner } 형태로 저장된다.
+  - outerEnvironmentReference에는 **outer 함수가 선언될 당시의 LexicalEnvironment가 담긴다.** 형태는 `{ 실행 컨텍스트의 이름(직전에 활성화 된), environmentRecord 객체(직전에 활성화된) }`로 저장된다. 그러므로 outer 실행 컨텍스트의 outerEnvironmentReference에는 [ GLOBAL, {a, outer} ] 형태로 저장된다.
+- outer 스코프에 있는 변수 inner에 함수를 할당함.
+
+---
+
+**활성화 컨텍스트: inner**
+
+- `7번째 줄` : inner 함수 호출함. outer 실행 컨텍스트가 일시중단되고 inner 실행 컨텍스트가 생성되고 활성화됨.
+- `3번째 줄`
+  - environmentRecord에는 { a(inner 함수 안의 변수) } 형태로 저장된다.
+  - outerEnvironmentReference에는 **inner 함수가 선언될 당시의 LexicalEnvironment**가 저장된다. 그러므로 [ outer, { inner } ] 형태로 저장된다.
+- `4번째 줄` : a는 undefined이다. 현재 활성화 상태인 inner 컨텍스트의 `environmentRecord`에 a가 발견됐지만 할당된 값이 없기 때문이다.
+- `5번째 줄` : inner scope에 있는 a에 3을 할당함
+- inner 함수 실행이 종료되고 inner 실행 컨텍스트가 콜 스택에서 제거된다. 일시중단되었던 outer 실행 컨텍스트가 다시 활성화되며 코드 8번째 줄이 실행된다.
+
+---
+
+**활성화 컨텍스트: outer**
+
+- 자바스크립트 엔진이 현재 활성화된 outer 컨텍스트의 environmentRecord를 확인한다. a가 있는지 확인하고 없으면 현재 실행 컨텍스트의 outerEnvironmentReference에 있는 environmentRecord로 넘어가는 식으로 계속해서 검색한다. 여기서는 전역 LexicalEnvironment에 a가 있으므로 그 a에 저장된 값을 반환한다.
+- outer 함수 실행 종료되고 outer 실행 컨텍스트가 콜 스택에서 제거된다. 일시중단되었던 전역 컨텍스트가 다시 활성화되면서 코드 11번째 줄을 실행한다.
+
+---
+
+**활성화 컨텍스트: 전역**
+
+- 현재 활성화 상태인 전역 컨텍스트의 environmentRecord 검색하여 a가 있기 때문에 a에 저장된 1을 출력한다.
+- 코드의 실행이 완료되었기 때문에 전역 컨텍스트가 콜 스택에서 제거되고 종료된다.
+
+![](https://images.velog.io/images/silviaoh/post/cea855b6-020e-4b70-ac3f-89d7c82fdf13/image.png)
+
 ## ✅ 정리
 
 - 실행 컨텍스트 객체는 활성화되는 시점에 `VariableEnvironment`, `LexicalEnvironment`, `thisBinding`의 세 가지 정보를 수집한다.
+
+---
+
 - `VariableEnvironment`는 **현재 컨텍스트 내의 식별자 정보 + 외부 환경 정보, LexicalEnvironment의 스냅샷을 내용으로 보유한다.**
-- `VariableEnvironment`와 LexicalEnvironment는 동일한 내용으로 구성된다.
-- 둘의 차이점은 `VariableEnvironment`는 초기 상태를 유지하는 반면에 `LexicalEnvironment`는 함수 실행 도중에 변경되는 사항이 즉시 반영된다는 것이다.
-- `LexicalEnvironment`의 environmentRecord는 `매개변수명`, `변수의 식별자`, `선언한 함수의 함수명` 등을 수집하여 저장하는 객체이다.
-- `LexicalEnvironment`의 outerEnvironmentReference는 바로 직전 컨텍스트의 LexicalEnvironment의 정보를 참조하는 연결 리스트이다.
+- VariableEnvironment와 LexicalEnvironment는 동일한 내용으로 구성된다.
+- 둘의 **차이점**은 VariableEnvironment는 초기 상태를 유지하는 반면에 LexicalEnvironment는 함수 실행 도중에 변경되는 사항이 즉시 반영된다는 것이다.
+- `LexicalEnvironment`의 environmentRecord는 `매개변수명`, `변수의 식별자`, `선언한 함수의 함수명` 등을 수집하여 저장하는 **객체**이다.
 - `호이스팅(Hoisting)`은 코드 해석을 좀 더 수월하게 하기 위해 environmentRecord의 수집 과정을 추상화한 개념이며, 실행 컨텍스트가 관여하는 코드 집단의 최상단으로 이를 '끌어올린다'고 해석하는 것이다.
-- 변수 호이스팅은 선언부만 코드 최상단으로 끌어올리고 할당부는 원래 자리에 남아있는다.
-- 함수 선언문은 function 정의부만 존재하고 별도의 할당 명령이 없는 것이며, 함수 표현식은 정의한 함수를 변수에 할당하는 것이다.
+- **변수 호이스팅**은 선언부만 코드 최상단으로 끌어올리고 할당부는 원래 자리에 남아있는다.
+- **함수 선언문**은 function 정의부만 존재하고 별도의 할당 명령이 없는 것이며, **함수 표현식**은 정의한 함수를 변수에 할당하는 것이다.
+
+---
+
+- `LexicalEnvironment`의 outerEnvironmentReference는 바로 직전 컨텍스트의 LexicalEnvironment의 정보를 참조하는 연결 리스트이다.
+- **스코프**는 식별자에 대한 유효범위이고, 스코프 체인은 스코프(유효 범위)를 안에서부터 바깥으로 차례대로 검색해나가는 것을 말한다.
+- **outerEnvironmentReference의 형태**는 [ 컨텍스트의 이름, environmentRecord 객체 ]이다.
+- 자바스크립트 엔진은 변수가 있는지 검색할 때 현재 활성화된 실행 컨텍스트의 L.E(LexicalEnvironment)의 environmentRecord를 먼저 검색하고 없을 경우 outerEnvironmentReference에 있는 environmentRecord를 검색한다.
