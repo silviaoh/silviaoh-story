@@ -1,5 +1,5 @@
 ---
-title: '[JavaScript.6] 실행 컨텍스트에 저장되는 정보'
+title: '[JavaScript.6] 실행 컨텍스트에 저장되는 정보 ⓵'
 date: 2021-09-11 22:09:58
 category: 'JavaScript'
 draft: false
@@ -23,9 +23,11 @@ draft: false
 
 ## LexicalEnvironment
 
+`environmentRecord` 객체와 `outerEnvironmentReference` 리스트로 구성되어 있다.
+
 ### environmentRecord
 
-environmentRecord에는 현재 컨텍스트와 관련된 코드의 식별자 정보들이 저장된다.
+`environmentRecord`에는 현재 컨텍스트와 관련된 코드의 식별자 정보들이 저장된다.
 
 여기서 코드의 식별자 정보들이란 `한 함수에 지정된 매개변수 식별자`, 함수가 있을 경우 `그 함수 자체`, `선언된 변수의 식별자` 등이다.
 컨텍스트의 내부 전체를 처음부터 끝까지 쭉 훑어나가며 순서대로 수집한다.
@@ -141,3 +143,59 @@ function a() {
 }
 a()
 ```
+
+#### Example로 이해하는 함수 선언문 vs 함수 표현식
+
+변수 호이스팅은 선언부만 호이스팅되고 할당부는 그 자리에 그대로 남겨둔다. 여기서 함수 선언문과 함수 표현식의 차이가 발생하게 된다.
+
+```javascript
+console.log(sum(1, 2))
+console.log(multiply(3, 4))
+
+function sum(a, b) {
+  // 함수 선언문
+  return a + b
+}
+
+var multiply = function(a, b) {
+  // 함수 표현식
+  return a * b
+}
+```
+
+sum 함수처럼 function 정의부만 존재하고 별도의 할당 명령이 없는 것을 `함수 선언문`이라고 하고, multiply 함수처럼 정의한 function을 별도의 변수에 할당하는 것을 `함수 표현식`이라고 한다. environmentRecord의 정보 수집 과정에서 발생하는 호이스팅을 살펴보자.
+
+```javascript
+// 메모리 공간을 확보하고 확보된 공간의 주소값을 sum에 연결한다.
+var sum = function sum(a, b) {
+  // 함수 선언문은 전체를 호이스팅한다.
+  return a + b
+}
+// 다른 메모리 공간을 확보하고 그 공간의 주소값을 변수 multiply에 연결한다.
+/* 그 후에 sum 함수를 또 다른 메모리 공간에 저장하고, 그 주소값을 앞서 선언한 변수 sum의 공간에 할당한다.
+이로써 변수 sum은 함수 sum을 바라보는 상태가 된다.*/
+var multiply // 변수는 선언부만 호이스팅 된다.
+//sum을 실행한다.
+console.log(sum(1, 2))
+// multiply에는 값이 할당되어있지 않기 때문에 multiply is not a function이라는 에러 메시지가 출력될 것이다.
+console.log(multiply(3, 4))
+// 이 줄도 앞의 에러로 인해서 실행되지 않은 채 런타임이 종료된다.
+multiply = function(a, b) {
+  // 할당부는 호이스팅 되지 않는다.
+  return a * b
+}
+```
+
+위처럼 함수 선언문은 함수 전체를 호이스팅 하는 반면 함수 표현식은 변수에 함수가 할당되어 있는 것이기 때문에 선언부만 호이스팅되고 할당부는 끌어올려지지 않는다. 여기서 결과의 차이가 발생하는 것이다.
+
+## ✅ 정리
+
+- 실행 컨텍스트 객체는 활성화되는 시점에 `VariableEnvironment`, `LexicalEnvironment`, `thisBinding`의 세 가지 정보를 수집한다.
+- `VariableEnvironment`는 **현재 컨텍스트 내의 식별자 정보 + 외부 환경 정보, LexicalEnvironment의 스냅샷을 내용으로 보유한다.**
+- `VariableEnvironment`와 LexicalEnvironment는 동일한 내용으로 구성된다.
+- 둘의 차이점은 `VariableEnvironment`는 초기 상태를 유지하는 반면에 `LexicalEnvironment`는 함수 실행 도중에 변경되는 사항이 즉시 반영된다는 것이다.
+- `LexicalEnvironment`의 environmentRecord는 `매개변수명`, `변수의 식별자`, `선언한 함수의 함수명` 등을 수집하여 저장하는 객체이다.
+- `LexicalEnvironment`의 outerEnvironmentReference는 바로 직전 컨텍스트의 LexicalEnvironment의 정보를 참조하는 연결 리스트이다.
+- `호이스팅(Hoisting)`은 코드 해석을 좀 더 수월하게 하기 위해 environmentRecord의 수집 과정을 추상화한 개념이며, 실행 컨텍스트가 관여하는 코드 집단의 최상단으로 이를 '끌어올린다'고 해석하는 것이다.
+- 변수 호이스팅은 선언부만 코드 최상단으로 끌어올리고 할당부는 원래 자리에 남아있는다.
+- 함수 선언문은 function 정의부만 존재하고 별도의 할당 명령이 없는 것이며, 함수 표현식은 정의한 함수를 변수에 할당하는 것이다.
