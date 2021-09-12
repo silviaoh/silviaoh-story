@@ -2,6 +2,7 @@
 title: '[JavaScript.6] 실행 컨텍스트에 저장되는 정보'
 date: 2021-09-11 22:09:58
 category: 'JavaScript'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 
