@@ -2,6 +2,7 @@
 title: '[Record.GREAM] Radio Button을 이용한 Carousel'
 date: 2021-09-07 23:09:96
 category: 'Record'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

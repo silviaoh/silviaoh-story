@@ -2,6 +2,7 @@
 title: '[JavaScript.3] spread & rest'
 date: 2021-09-07 23:09:82
 category: 'JavaScript'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

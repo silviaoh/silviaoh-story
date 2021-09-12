@@ -2,6 +2,7 @@
 title: '[GREAM] Review'
 date: 2021-09-07 23:09:08
 category: 'Review'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

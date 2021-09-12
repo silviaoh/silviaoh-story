@@ -2,6 +2,7 @@
 title: '[Record.녹차록] Kakao Link'
 date: 2021-09-07 22:09:33
 category: 'Record'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

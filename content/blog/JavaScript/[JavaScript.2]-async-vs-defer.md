@@ -2,6 +2,7 @@
 title: '[JavaScript.2] async vs defer'
 date: 2021-09-07 20:09:26
 category: 'JavaScript'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

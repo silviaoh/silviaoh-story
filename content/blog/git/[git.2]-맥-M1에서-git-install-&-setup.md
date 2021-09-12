@@ -2,6 +2,7 @@
 title: '[Git.2] 맥 M1에서 Git install & setup'
 date: 2021-09-07 23:09:13
 category: 'git'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

@@ -2,6 +2,7 @@
 title: '[JavaScript.5] 실행 컨텍스트'
 date: 2021-09-10 22:09:52
 category: 'JavaScript'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

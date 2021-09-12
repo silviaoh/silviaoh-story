@@ -2,6 +2,7 @@
 title: '[Record.GREAM] Chart.js 라이브러리를 이용한 그래프 구현'
 date: 2021-09-07 23:09:71
 category: 'Record'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

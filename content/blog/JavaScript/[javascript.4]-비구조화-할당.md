@@ -2,6 +2,7 @@
 title: '[JavaScript.4] 비구조화 할당'
 date: 2021-09-07 23:09:74
 category: 'JavaScript'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

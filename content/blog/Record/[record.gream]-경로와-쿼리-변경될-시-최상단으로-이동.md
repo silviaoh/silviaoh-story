@@ -2,6 +2,7 @@
 title: '[Record.GREAM] 경로와 쿼리 변경될 시 최상단으로 이동'
 date: 2021-09-07 23:09:80
 category: 'Record'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

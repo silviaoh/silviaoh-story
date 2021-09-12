@@ -2,6 +2,7 @@
 title: '[Git.1] Git'
 date: 2021-09-07 23:09:36
 category: 'git'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

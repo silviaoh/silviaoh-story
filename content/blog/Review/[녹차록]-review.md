@@ -2,6 +2,7 @@
 title: '[녹차록] Review'
 date: 2021-09-07 22:09:82
 category: 'Review'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

@@ -2,6 +2,7 @@
 title: '[Git.3] Git vs GitHub'
 date: 2021-09-07 23:09:88
 category: 'git'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

@@ -2,6 +2,7 @@
 title: '[Record.GREAM] Click 시 활성화되고 비활성화되는 Dropdown'
 date: 2021-09-07 23:09:23
 category: 'Record'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

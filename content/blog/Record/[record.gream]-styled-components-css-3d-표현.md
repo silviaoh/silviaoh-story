@@ -2,6 +2,7 @@
 title: '[Record.GREAM] styled-components CSS 3D 표현'
 date: 2021-09-07 23:09:27
 category: 'Record'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

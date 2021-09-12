@@ -2,6 +2,7 @@
 title: '[JavaScript.1] var, let, const'
 date: 2021-09-07 19:09:82
 category: 'JavaScript'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 

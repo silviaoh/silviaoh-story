@@ -2,6 +2,7 @@
 title: '[Record.녹차록] List & Detail Page 구현 내용'
 date: 2021-09-07 22:09:88
 category: 'Record'
+thumbnail: { thumbnailSrc }
 draft: false
 ---
 
